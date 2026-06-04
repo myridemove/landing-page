@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { ROUTES, Route, useCityCtx } from '../contexts/CityContext';
 
 const MARQUEE_ITEMS = [
   <>MI–01 Duomo <b className="dot">●</b> LIVE</>,
@@ -170,28 +171,34 @@ function DuomoSvg() {
   );
 }
 
-function BookingCard() {
+
+function BookingCard({ route, visible }: { route: Route; visible: boolean }) {
   return (
-    <div className="book-card" role="group" aria-label="Booking preview">
+    <div
+      className="book-card"
+      role="group"
+      aria-label="Booking preview"
+      style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.3s ease' }}
+    >
       <div className="row">
         <span className="pin a">A</span>
         <div className="addr">
-          Corso Como 12<small>Zona Porta Nuova</small>
+          {route.from.street}<small>{route.from.zone}</small>
         </div>
       </div>
       <div className="row">
         <span className="pin b">B</span>
         <div className="addr">
-          Via Tortona 35<small>Zona Tortona · Navigli</small>
+          {route.to.street}<small>{route.to.zone}</small>
         </div>
       </div>
       <div className="eta">
         <div>
-          <div className="num">3:42</div>
-          <div className="unit">ETA · 7.4 KM</div>
+          <div className="num">{route.time}</div>
+          <div className="unit">{route.km} KM · {route.city}</div>
         </div>
         <span className="go">
-          € 11,90{' '}
+          {route.price}{' '}
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M5 12h14M13 5l7 7-7 7" />
           </svg>
@@ -202,6 +209,65 @@ function BookingCard() {
 }
 
 export function Hero() {
+  const [idx, setIdx] = useState(0);
+  const [displayCity, setDisplayCity] = useState(ROUTES[0].city);
+  const [cardVisible, setCardVisible] = useState(true);
+  const { setIdx: setGlobalIdx } = useCityCtx();
+
+  useEffect(() => {
+    setGlobalIdx(idx);
+  }, [idx, setGlobalIdx]);
+
+  useEffect(() => {
+    const STEP = 28;        // ms per letter
+    const IDLE = 3200;      // ms showing full city before animating
+    const EMPTY_PAUSE = 60; // ms pause at empty state
+
+    const timeouts: ReturnType<typeof setTimeout>[] = [];
+
+    const runCycle = (currentIdx: number) => {
+      const current = ROUTES[currentIdx];
+      const nextIdx = (currentIdx + 1) % ROUTES.length;
+      const next = ROUTES[nextIdx];
+
+      let delay = IDLE;
+
+      // Fade out booking card at start of transition
+      timeouts.push(setTimeout(() => setCardVisible(false), delay));
+
+      // Erase current city letter by letter
+      for (let i = current.city.length - 1; i >= 0; i--) {
+        const partial = current.city.slice(0, i);
+        const d = delay;
+        timeouts.push(setTimeout(() => setDisplayCity(partial), d));
+        delay += STEP;
+      }
+
+      // Switch route index when display is empty
+      timeouts.push(setTimeout(() => setIdx(nextIdx), delay));
+      delay += EMPTY_PAUSE;
+
+      // Type next city letter by letter
+      for (let i = 1; i <= next.city.length; i++) {
+        const partial = next.city.slice(0, i);
+        const d = delay;
+        timeouts.push(setTimeout(() => setDisplayCity(partial), d));
+        delay += STEP;
+      }
+
+      // Fade in booking card once city is fully typed
+      timeouts.push(setTimeout(() => setCardVisible(true), delay));
+
+      // Schedule next cycle
+      timeouts.push(setTimeout(() => runCycle(nextIdx), delay));
+    };
+
+    runCycle(0);
+
+    return () => timeouts.forEach(clearTimeout);
+  }, []);
+
+  const route = ROUTES[idx];
   const allItems = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
 
   return (
@@ -213,17 +279,19 @@ export function Hero() {
         <div className="hero-left">
           <div className="hero-eyebrow">
             <span className="pulse" aria-hidden="true" />
-            <span className="eyebrow">Milano · Live · 24 / 7</span>
+            <span className="eyebrow">
+              {route.city}{' · Live · 24 / 7'}
+            </span>
           </div>
 
           <h1 className="hero-h1 reveal">
-            Milano<br />
+            <span style={{ display: 'inline-block' }}>{displayCity || '\u00A0'}</span><br />
             non <span className="accent">aspetta</span><span className="period">.</span>
           </h1>
 
           <p className="hero-sub reveal" style={{ '--delay': '120ms' } as React.CSSProperties}>
-            Il primo servizio moto-taxi di Milano.
-            Veloce, sicuro, economico — taglia il traffico e arriva in 3 minuti.
+            Il primo servizio moto-taxi in Europa — veloce, sicuro, economico.
+            Meno attesa nei tuoi spostamenti.
           </p>
 
           <div className="hero-ctas reveal" style={{ '--delay': '240ms' } as React.CSSProperties}>
@@ -241,10 +309,10 @@ export function Hero() {
           <div className="hero-meta reveal" style={{ '--delay': '360ms' } as React.CSSProperties}>
             <span>
               <b data-count="3" data-suffix=" min">0 min</b><br />
-              ETA target*
+              tempo stimato*
             </span>
             <span>
-              <b>2026</b><br />
+              <b>2027</b><br />
               lancio previsto
             </span>
             <span>
@@ -264,7 +332,7 @@ export function Hero() {
               </div>
               <MotoSvg />
             </div>
-            <BookingCard />
+            <BookingCard route={route} visible={cardVisible} />
           </div>
         </div>
       </div>

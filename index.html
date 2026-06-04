@@ -3,8 +3,22 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>MyRide — Milano non aspetta.</title>
-		<meta name="description" content="Il primo servizio moto-taxi di Milano. Veloce, sicuro, economico." />
+		<meta name="color-scheme" content="light dark" />
+		<title>MyRide — La città non aspetta.</title>
+		<meta name="description" content="Il servizio moto-taxi veloce, sicuro ed economico. Meno attesa nei tuoi spostamenti." />
+		<!-- Anti-FOUC: apply theme before React renders -->
+		<script>
+			(function () {
+				var saved = localStorage.getItem('theme');
+				var theme =
+					saved === 'light' || saved === 'dark'
+						? saved
+						: window.matchMedia('(prefers-color-scheme: dark)').matches
+						? 'dark'
+						: 'light';
+				document.documentElement.setAttribute('data-theme', theme);
+			})();
+		</script>
 		<link rel="preconnect" href="https://api.fontshare.com" crossorigin="" />
 		<link
 			href="https://api.fontshare.com/v2/css?f[]=bricolage-grotesque@400,500,600,700,800&f[]=general-sans@300,400,500,600,700&f[]=jetbrains-mono@400,500&display=swap"

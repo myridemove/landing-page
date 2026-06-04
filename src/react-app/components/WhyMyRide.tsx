@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { ROUTES, useCityCtx } from '../contexts/CityContext';
 
 const CheckIcon = () => (
   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -7,11 +8,11 @@ const CheckIcon = () => (
 );
 
 const SAFETY_CHECKS = [
-  'Casco integrale ECE 22.06',
-  'Giacca e guanti certificati',
+  'Rider verificati e qualificati',
+  'Verifica identità e documenti',
+  'Standard di sicurezza premium',
   'GPS tracciato in tempo reale',
   'Copertura assicurativa full',
-  'Rider con patente A ≥ 3 anni',
 ];
 
 const PRICE_ROWS = [
@@ -32,12 +33,12 @@ function CoverageSvg() {
     >
       <defs>
         <radialGradient id="cov" cx="0.5" cy="0.55" r="0.6">
-          <stop offset="0" stopColor="oklch(0.55 0.22 27)" stopOpacity="0.32" />
-          <stop offset="1" stopColor="oklch(0.55 0.22 27)" stopOpacity="0" />
+          <stop offset="0" style={{ stopColor: 'var(--red)', stopOpacity: 0.32 }} />
+          <stop offset="1" style={{ stopColor: 'var(--red)', stopOpacity: 0 }} />
         </radialGradient>
       </defs>
       {/* Street grid abstraction */}
-      <g stroke="oklch(0.32 0.01 40)" strokeWidth="0.8" opacity=".8">
+      <g className="map-grid" strokeWidth="0.8" opacity=".8">
         <path d="M0 80 C 150 60 360 120 600 90" />
         <path d="M0 160 C 180 140 400 200 600 170" />
         <path d="M0 240 C 120 220 420 280 600 250" />
@@ -49,10 +50,10 @@ function CoverageSvg() {
       </g>
       {/* Service zone */}
       <circle cx="320" cy="220" r="190" fill="url(#cov)" />
-      <circle cx="320" cy="220" r="150" fill="none" stroke="oklch(0.55 0.22 27)" strokeWidth="1.2" strokeDasharray="2 6" />
-      <circle cx="320" cy="220" r="190" fill="none" stroke="oklch(0.55 0.22 27)" strokeWidth="0.8" strokeDasharray="2 8" opacity=".55" />
+      <circle cx="320" cy="220" r="150" fill="none" stroke="var(--red)" strokeWidth="1.2" strokeDasharray="2 6" />
+      <circle cx="320" cy="220" r="190" fill="none" stroke="var(--red)" strokeWidth="0.8" strokeDasharray="2 8" opacity=".55" />
       {/* Rider dots */}
-      <g fill="oklch(0.96 0.01 80)">
+      <g fill="var(--cream-1)">
         <circle cx="220" cy="160" r="3" /><circle cx="280" cy="230" r="3" />
         <circle cx="360" cy="190" r="3" /><circle cx="400" cy="260" r="3" />
         <circle cx="320" cy="300" r="3" /><circle cx="240" cy="280" r="3" />
@@ -60,23 +61,40 @@ function CoverageSvg() {
       </g>
       {/* Duomo marker */}
       <g transform="translate(320,220)">
-        <circle r="9" fill="oklch(0.55 0.22 27)" />
-        <circle r="16" fill="none" stroke="oklch(0.55 0.22 27)" strokeWidth="1" />
-        <circle r="26" fill="none" stroke="oklch(0.55 0.22 27)" strokeWidth="0.5" opacity=".6" />
+        <circle r="9" fill="var(--red)" />
+        <circle r="16" fill="none" stroke="var(--red)" strokeWidth="1" />
+        <circle r="26" fill="none" stroke="var(--red)" strokeWidth="0.5" opacity=".6" />
       </g>
     </svg>
   );
 }
 
 export function WhyMyRide() {
+  const { idx } = useCityCtx();
+  const route = ROUTES[idx];
+
+  const [coverageIdx, setCoverageIdx] = useState(idx);
+  const [coverageVisible, setCoverageVisible] = useState(true);
+
+  useEffect(() => {
+    setCoverageVisible(false);
+    const t = setTimeout(() => {
+      setCoverageIdx(idx);
+      setCoverageVisible(true);
+    }, 300);
+    return () => clearTimeout(t);
+  }, [idx]);
+
+  const coverageRoute = ROUTES[coverageIdx];
+
   return (
     <section id="why">
       <div className="wrap">
         <div className="section-head two reveal">
-          <h2>Perché MyRide vince il traffico di Milano.</h2>
+          <h2>Perché MyRide taglia il traffico delle città.</h2>
           <p>
             <span className="section-index">§ 02 / Perché MyRide</span><br />
-            Non siamo un&apos;altra app per chiamare un taxi. Siamo il modo più onesto di spostarsi in una città costruita a misura di Vespa.
+            Non siamo un&apos;altra app per chiamare un taxi. Siamo il modo più rapido di spostarsi in una città costruita a misura di Vespa.
           </p>
         </div>
 
@@ -85,7 +103,7 @@ export function WhyMyRide() {
           <div className="tile t-speed reveal">
             <div className="ticker">
               <span className="live">● LIVE</span>
-              <span>Milano · 09:42</span>
+              <span>{route.city} · 09:42</span>
             </div>
             <div>
               <div className="tile-eyebrow">Velocità media</div>
@@ -108,7 +126,7 @@ export function WhyMyRide() {
                 </b>
               </div>
               <div className="bar">
-                <small>Taxi Milano</small>
+                <small>Taxi locale</small>
                 <b>
                   11 min
                   <span style={{ color: 'var(--cream-3)', fontFamily: "'JetBrains Mono'", fontSize: '11px', marginLeft: '6px' }}>
@@ -125,8 +143,16 @@ export function WhyMyRide() {
             <div className="map-inner">
               <div>
                 <div className="tile-eyebrow">Area attiva</div>
-                <h3 className="tile-title" style={{ marginTop: '6px' }}>
-                  Dal Duomo ai Navigli,<br />da Isola a Tortona.
+                <h3
+                  className="tile-title"
+                  style={{
+                    marginTop: '6px',
+                    opacity: coverageVisible ? 1 : 0,
+                    filter: coverageVisible ? 'blur(0px)' : 'blur(6px)',
+                    transition: 'opacity 0.3s ease, filter 0.3s ease',
+                  }}
+                >
+                  {coverageRoute.coverageLine1}<br />{coverageRoute.coverageLine2}
                 </h3>
               </div>
               <div className="hq">
@@ -140,7 +166,7 @@ export function WhyMyRide() {
             <div>
               <div className="tile-eyebrow">Sicurezza, sempre</div>
               <h3 className="tile-title" style={{ marginTop: '10px' }}>
-                Ogni rider è<br />un professionista.
+                La sicurezza è<br />parte del servizio.
               </h3>
             </div>
             <ul className="checks">
@@ -158,7 +184,7 @@ export function WhyMyRide() {
             <div>
               <div className="tile-eyebrow">Prezzo onesto</div>
               <h3 className="tile-title" style={{ marginTop: '10px' }}>
-                Duomo → Isola,<br />alle 18:40.
+                Più veloce,<br />meno costoso.
               </h3>
             </div>
             <div className="table">
@@ -186,7 +212,7 @@ export function WhyMyRide() {
               <div className="clock">
                 <em>24</em>/7
                 <span style={{ fontFamily: "'JetBrains Mono'", color: 'var(--cream-3)', fontSize: '14px', fontWeight: 400, marginLeft: '8px' }}>
-                  · SEMPRE ATTIVI*
+                  {'\u00B7 SEMPRE\u2003ATTIVI'}
                 </span>
               </div>
             </div>

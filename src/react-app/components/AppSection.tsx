@@ -46,7 +46,7 @@ function PhoneMockup() {
           </div>
           <div className="app-nav">
             <div className="hello">
-              Ciao, Sofia.<small>Milano · Isola</small>
+              Ciao, Sofia.
             </div>
             <div className="avi" />
           </div>
@@ -58,12 +58,12 @@ function PhoneMockup() {
             Dove vuoi andare?
             <span className="k">⌘ K</span>
           </div>
-          <div className="routes">
+            <div className="routes">
             <div className="route">
               <span className="dot" />
               <div>
                 <small style={{ fontFamily: "'JetBrains Mono'", fontSize: '9px', color: 'var(--cream-3)', letterSpacing: '0.18em' }}>CASA</small>
-                <br /><b>Via Melzo 14</b>
+                <br /><b>Indirizzo di casa</b>
               </div>
               <span className="eta">6 min</span>
             </div>
@@ -71,7 +71,7 @@ function PhoneMockup() {
               <span className="dot" />
               <div>
                 <small style={{ fontFamily: "'JetBrains Mono'", fontSize: '9px', color: 'var(--cream-3)', letterSpacing: '0.18em' }}>LAVORO</small>
-                <br /><b>Via Tortona 35</b>
+                <br /><b>Ufficio</b>
               </div>
               <span className="eta">→ ora</span>
             </div>
@@ -79,14 +79,14 @@ function PhoneMockup() {
               <span className="dot" />
               <div>
                 <small style={{ fontFamily: "'JetBrains Mono'", fontSize: '9px', color: 'var(--cream-3)', letterSpacing: '0.18em' }}>RECENTI</small>
-                <br /><b>Navigli · Alzaia Grande</b>
+                <br /><b>Centro città</b>
               </div>
               <span className="eta">12 min</span>
             </div>
           </div>
           <div className="cta-bar">
             <div>
-              <small>ETA 3 min · 7.4 km</small>
+              <small>~3 min · 7.4 km</small>
               <b>Prenota · € 9,90</b>
             </div>
             <span className="circle">
@@ -112,9 +112,9 @@ export function AppSection() {
             Presto tra le tue <em>mani.</em>
           </h2>
           <p>
-            L&apos;app MyRide sarà gratuita. La prima corsa sarà a metà prezzo. Nessun abbonamento,
+            L&apos;app MyRide sarà gratuita. Nessun abbonamento,
             nessun pedaggio nascosto — solo un casco e una città finalmente rapida.
-            Lancio previsto 2026 — iscriviti alla lista d&apos;attesa per essere tra i primi a provarla.
+            Lancio Primavera 2027 — iscriviti alla lista d&apos;attesa per essere tra i primi a provarla.
           </p>
 
           <div className="badges">
@@ -133,7 +133,7 @@ export function AppSection() {
             fontFamily: "'JetBrains Mono'", fontSize: '11px',
             color: 'var(--cream-3)', letterSpacing: '0.18em', textTransform: 'uppercase',
           }}>
-            <span><span style={{ color: 'var(--gold)' }}>●</span> Lancio Milano · 2026</span>
+            <span><span style={{ color: 'var(--gold)' }}>●</span> Lancio Primavera 2027</span>
             <span>Lista d&apos;attesa aperta</span>
           </div>
         </div>

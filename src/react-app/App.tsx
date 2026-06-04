@@ -8,6 +8,7 @@ import { WhyMyRide } from './components/WhyMyRide';
 import { Proof } from './components/Proof';
 import { AppSection } from './components/AppSection';
 import { Footer } from './components/Footer';
+import { CityProvider } from './contexts/CityContext';
 
 export default function App() {
   useReveal();
@@ -15,7 +16,7 @@ export default function App() {
   useCustomCursor();
 
   return (
-    <>
+    <CityProvider>
       <div id="cursor" className="cursor" aria-hidden="true" />
       <Nav />
       <Hero />
@@ -24,6 +25,6 @@ export default function App() {
       <Proof />
       <AppSection />
       <Footer />
-    </>
+    </CityProvider>
   );
 }

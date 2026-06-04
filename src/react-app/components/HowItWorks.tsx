@@ -14,20 +14,20 @@ const STEPS: Step[] = [
     icon: <MapPin size={18} />,
     num: '01',
     title: 'Fissa il punto.',
-    body: 'Apri l\'app, tocca la mappa. Il rider più vicino arriva in meno di 3 minuti — confermato al secondo.',
+    body: 'Apri l\'app, tocca la mappa. Il rider più vicino arriva in meno di 3 minuti.',
   },
   {
     icon: <HardHat size={18} />,
     num: '02',
     title: 'Indossa il casco.',
-    body: 'Casco integrale, giacca protettiva, guanti — sanificati dopo ogni corsa. Zero scuse, zero attrito.',
+    body: 'Casco integrale — sanificato dopo ogni corsa. Ogni viaggio con la massima sicurezza e igiene.',
     delay: '120ms',
   },
   {
     icon: <Zap size={18} />,
     num: '03',
     title: 'Taglia il traffico.',
-    body: 'Ti siedi. Il rider parte. Sali sui Navigli, voli verso Porta Nuova, e paghi in-app quando scendi.',
+    body: 'Ti siedi. Il rider parte. Parti, arrivi a destinazione, e paghi direttamente dall\'app quando scendi.',
     delay: '240ms',
   },
 ];
@@ -37,7 +37,7 @@ export function HowItWorks() {
     <section id="how">
       <div className="wrap">
         <div className="section-head two reveal">
-          <h2>Tre tap. Un casco. Milano in un lampo.</h2>
+          <h2>Tre tap. Un casco. Ovunque in un lampo.</h2>
           <p>
             <span className="section-index">§ 01 / Come funziona</span><br />
             Niente stalli, niente attese, niente ansia da traffico. MyRide ti porta dove devi essere — precisamente quando devi esserci.

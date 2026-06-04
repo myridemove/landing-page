@@ -1,5 +1,57 @@
 /* ========= TOKENS ========= */
+
+/* --- Light mode (default) — palette sourced from mr-lp/mvp brand tokens --- */
 :root {
+  color-scheme: light;
+
+  /* Surfaces: white → very-light teal tint */
+  --ink-0:   #ffffff;
+  --ink-1:   #ffffff;
+  --ink-2:   rgb(244 255 254);
+  --ink-3:   rgb(225 249 248);
+  --ink-4:   rgb(190 229 228);
+
+  /* Foreground: deep navy hierarchy */
+  --cream-1: #0d0c3d;
+  --cream-2: #373660;
+  --cream-3: #5f5e80;
+  --cream-4: #8f8ea5;
+
+  /* Accent: brand teal (maps to --color-red in mvp light) */
+  --red:     #00c7c1;
+  --red-hi:  #21ded8;
+  --red-lo:  #00918d;
+
+  /* Secondary accent: navy (maps to --color-gold in mvp light) */
+  --gold:    #0d0c3d;
+  --gold-hi: #00c7c1;
+
+  --hair:    rgb(13 12 61 / 0.10);
+  --hair-2:  rgb(13 12 61 / 0.06);
+
+  --step--1: clamp(0.78rem, 0.76rem + 0.1vw, 0.84rem);
+  --step-0:  clamp(0.94rem, 0.90rem + 0.2vw, 1.02rem);
+  --step-1:  clamp(1.10rem, 1.02rem + 0.4vw, 1.25rem);
+  --step-2:  clamp(1.35rem, 1.20rem + 0.8vw, 1.7rem);
+  --step-3:  clamp(1.8rem, 1.5rem + 1.4vw, 2.6rem);
+  --step-4:  clamp(2.6rem, 2.0rem + 2.8vw, 4.2rem);
+  --step-hero: clamp(4rem, 3rem + 7.5vw, 9.5rem);
+
+  --s-1: 4px;  --s-2: 8px;   --s-3: 12px; --s-4: 16px;
+  --s-5: 24px; --s-6: 32px;  --s-7: 48px; --s-8: 64px;
+  --s-9: 96px; --s-10: 128px; --s-11: 192px;
+
+  --max: 1440px;
+  --gutter: clamp(20px, 4vw, 56px);
+
+  --easing: cubic-bezier(.2,.7,.2,1);
+  --dur-1: 200ms; --dur-2: 420ms; --dur-3: 700ms;
+}
+
+/* --- Dark mode — original landing-page dark palette --- */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
   --ink-0:   oklch(0.09  0.008 40);
   --ink-1:   oklch(0.13  0.010 40);
   --ink-2:   oklch(0.17  0.010 40);
@@ -20,24 +72,6 @@
 
   --hair:    color-mix(in oklch, var(--cream-1) 10%, transparent);
   --hair-2:  color-mix(in oklch, var(--cream-1) 6%,  transparent);
-
-  --step--1: clamp(0.78rem, 0.76rem + 0.1vw, 0.84rem);
-  --step-0:  clamp(0.94rem, 0.90rem + 0.2vw, 1.02rem);
-  --step-1:  clamp(1.10rem, 1.02rem + 0.4vw, 1.25rem);
-  --step-2:  clamp(1.35rem, 1.20rem + 0.8vw, 1.7rem);
-  --step-3:  clamp(1.8rem, 1.5rem + 1.4vw, 2.6rem);
-  --step-4:  clamp(2.6rem, 2.0rem + 2.8vw, 4.2rem);
-  --step-hero: clamp(4rem, 3rem + 7.5vw, 9.5rem);
-
-  --s-1: 4px;  --s-2: 8px;   --s-3: 12px; --s-4: 16px;
-  --s-5: 24px; --s-6: 32px;  --s-7: 48px; --s-8: 64px;
-  --s-9: 96px; --s-10: 128px; --s-11: 192px;
-
-  --max: 1440px;
-  --gutter: clamp(20px, 4vw, 56px);
-
-  --easing: cubic-bezier(.2,.7,.2,1);
-  --dur-1: 200ms; --dur-2: 420ms; --dur-3: 700ms;
 }
 
 /* ========= RESET ========= */
@@ -109,15 +143,13 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 .logo-mark {
   width: 26px; height: 26px; display: grid; place-items: center;
-  background: var(--red); color: var(--cream-1);
+  color: var(--cream-3);
   border-radius: 6px;
-  box-shadow:
-    inset 0 0 0 1px color-mix(in oklch, var(--cream-1) 14%, transparent),
-    0 0 0 4px color-mix(in oklch, var(--red) 18%, transparent);
-  font-size: 13px; font-weight: 800;
-  font-family: "Bricolage Grotesque", sans-serif;
+  padding: 0;
+  transition: color var(--dur-2) var(--easing);
 }
-.logo-mark svg { width: 14px; height: 14px; stroke: currentColor }
+.logo-mark:hover { color: var(--cream-1) }
+.logo-mark svg { width: 16px; height: 16px; stroke: currentColor; transition: opacity var(--dur-2) var(--easing) }
 .nav-links { display: flex; gap: 28px; justify-content: center }
 .nav-links a {
   font-size: 14px; color: var(--cream-2); position: relative;
@@ -481,6 +513,11 @@ section { position: relative }
   height: 100%; display: flex; flex-direction: column; justify-content: space-between;
 }
 .t-coverage .zones { position: absolute; inset: 0; z-index: 1 }
+/* Grid stroke for dark mode */
+.map-grid { stroke: oklch(0.32 0.01 40) }
+/* Light mode: hide the grid entirely */
+:root[data-theme="light"] .map-grid { display: none }
+
 .t-coverage .hq {
   font-family: "JetBrains Mono"; font-size: 11px;
   color: var(--cream-3); letter-spacing: 0.18em; text-transform: uppercase;
@@ -705,8 +742,12 @@ section { position: relative }
 /* ========= FOOTER ========= */
 footer { padding-block: var(--s-8) var(--s-6); border-top: 1px solid var(--hair) }
 .foot-grid {
-  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: var(--s-7);
+  display: grid; grid-template-columns: 1fr auto; gap: var(--s-7);
   align-items: start;
+}
+.foot-links {
+  display: flex; flex-direction: column; gap: var(--s-7);
+  align-items: flex-end; text-align: right;
 }
 .foot-word {
   font-family: "Bricolage Grotesque"; font-weight: 800;
@@ -718,9 +759,9 @@ footer { padding-block: var(--s-8) var(--s-6); border-top: 1px solid var(--hair)
 .foot-col h4 {
   font-family: "JetBrains Mono"; font-size: 11px;
   letter-spacing: 0.22em; color: var(--cream-3); text-transform: uppercase;
-  margin: 0 0 var(--s-4);
+  margin: 0 0 var(--s-2);
 }
-.foot-col a { display: block; padding: 6px 0; color: var(--cream-2); font-size: 14px }
+.foot-col a { display: block; padding: 2px 0; color: var(--cream-2); font-size: 14px }
 .foot-col a:hover { color: var(--cream-1) }
 .foot-col a .it {
   color: var(--cream-4); font-family: "JetBrains Mono"; font-size: 11px;
@@ -743,6 +784,8 @@ footer { padding-block: var(--s-8) var(--s-6); border-top: 1px solid var(--hair)
   transition: transform 120ms linear, width 200ms var(--easing), height 200ms var(--easing), opacity 200ms;
 }
 .cursor.hot { width: 38px; height: 38px; background: color-mix(in oklch, var(--red) 80%, transparent) }
+/* difference blending inverts against white — switch to normal in light mode */
+:root[data-theme="light"] .cursor { mix-blend-mode: normal }
 @media (hover: none) { .cursor { display: none } }
 
 /* ========= REVEAL ========= */
@@ -779,5 +822,6 @@ footer { padding-block: var(--s-8) var(--s-6); border-top: 1px solid var(--hair)
   .t-speed, .t-coverage, .t-safety, .t-price, .t-avail { grid-column: span 12; grid-row: auto }
   .proof { grid-template-columns: 1fr }
   .app-grid { grid-template-columns: 1fr; padding-block: var(--s-8) }
-  .foot-grid { grid-template-columns: 1fr 1fr; gap: var(--s-6) }
+  .foot-grid { grid-template-columns: 1fr; gap: var(--s-6) }
+  .foot-links { align-items: flex-start; text-align: left }
 }
