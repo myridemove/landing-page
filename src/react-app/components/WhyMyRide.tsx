@@ -65,12 +65,15 @@ export function WhyMyRide() {
   const [coverageVisible, setCoverageVisible] = useState(true);
 
   useEffect(() => {
-    setCoverageVisible(false);
-    const timer = setTimeout(() => {
+    const fadeOut = setTimeout(() => setCoverageVisible(false), 0);
+    const fadeIn = setTimeout(() => {
       setCoverageIdx(idx);
       setCoverageVisible(true);
     }, 300);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(fadeOut);
+      clearTimeout(fadeIn);
+    };
   }, [idx]);
 
   const coverage = t.routes.coverage[coverageIdx];
