@@ -1,25 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { ROUTES, useCityCtx } from '../contexts/CityContext';
+import { useLocale } from '../contexts/LocaleContext';
 
 const CheckIcon = () => (
   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <path d="M20 6 9 17l-5-5" />
   </svg>
 );
-
-const SAFETY_CHECKS = [
-  'Rider verificati e qualificati',
-  'Verifica identità e documenti',
-  'Standard di sicurezza premium',
-  'GPS tracciato in tempo reale',
-  'Copertura assicurativa full',
-];
-
-const PRICE_ROWS = [
-  { label: 'Taxi tradizionale', sub: 'tariffa urbana', price: '€ 19,40', you: false },
-  { label: 'Ride-share auto', sub: 'tariffa dinamica', price: '€ 16,80', you: false },
-  { label: 'MyRide', sub: 'tariffa piatta · moto', price: '€ 9,90', you: true },
-];
 
 const PEAK_HOURS = new Set([7, 8, 9, 17, 18, 19, 22, 23, 0]);
 
@@ -71,6 +58,7 @@ function CoverageSvg() {
 
 export function WhyMyRide() {
   const { idx } = useCityCtx();
+  const { t } = useLocale();
   const route = ROUTES[idx];
 
   const [coverageIdx, setCoverageIdx] = useState(idx);
@@ -78,23 +66,29 @@ export function WhyMyRide() {
 
   useEffect(() => {
     setCoverageVisible(false);
-    const t = setTimeout(() => {
+    const timer = setTimeout(() => {
       setCoverageIdx(idx);
       setCoverageVisible(true);
     }, 300);
-    return () => clearTimeout(t);
+    return () => clearTimeout(timer);
   }, [idx]);
 
-  const coverageRoute = ROUTES[coverageIdx];
+  const coverage = t.routes.coverage[coverageIdx];
+
+  const priceRows = [
+    { label: t.why.priceTaxi, sub: t.why.priceTaxiSub, price: '€ 19,40', you: false },
+    { label: t.why.priceRideshare, sub: t.why.priceRideshareSub, price: '€ 16,80', you: false },
+    { label: t.why.priceMyRide, sub: t.why.priceMyRideSub, price: '€ 9,90', you: true },
+  ];
 
   return (
     <section id="why">
       <div className="wrap">
         <div className="section-head two reveal">
-          <h2>Perché MyRide taglia il traffico delle città.</h2>
+          <h2>{t.why.title}</h2>
           <p>
-            <span className="section-index">§ 02 / Perché MyRide</span><br />
-            Non siamo un&apos;altra app per chiamare un taxi. Siamo il modo più rapido di spostarsi in una città costruita a misura di Vespa.
+            <span className="section-index">{t.why.index}</span><br />
+            {t.why.sub}
           </p>
         </div>
 
@@ -106,13 +100,13 @@ export function WhyMyRide() {
               <span>{route.city} · 09:42</span>
             </div>
             <div>
-              <div className="tile-eyebrow">Velocità media</div>
+              <div className="tile-eyebrow">{t.why.avgSpeed}</div>
               <div className="big">
                 <em><span data-count="3" data-suffix="">0</span></em>
                 <span className="unit">MIN / ETA</span>
               </div>
               <p className="tile-body" style={{ marginTop: '10px' }}>
-                Dall&apos;istante in cui prenoti, al momento in cui ti siedi. Abbiamo misurato. Abbiamo vinto.
+                {t.why.speedBody}
               </p>
             </div>
             <div className="compare">
@@ -121,16 +115,16 @@ export function WhyMyRide() {
                 <b>
                   3 min
                   <span style={{ color: 'var(--cream-3)', fontFamily: "'JetBrains Mono'", fontSize: '11px', marginLeft: '6px' }}>
-                    ETA medio
+                    {t.why.avgEta}
                   </span>
                 </b>
               </div>
               <div className="bar">
-                <small>Taxi locale</small>
+                <small>{t.why.localTaxi}</small>
                 <b>
                   11 min
                   <span style={{ color: 'var(--cream-3)', fontFamily: "'JetBrains Mono'", fontSize: '11px', marginLeft: '6px' }}>
-                    a pari ora
+                    {t.why.sameHour}
                   </span>
                 </b>
               </div>
@@ -142,7 +136,7 @@ export function WhyMyRide() {
             <CoverageSvg />
             <div className="map-inner">
               <div>
-                <div className="tile-eyebrow">Area attiva</div>
+                <div className="tile-eyebrow">{t.why.activeArea}</div>
                 <h3
                   className="tile-title"
                   style={{
@@ -152,11 +146,11 @@ export function WhyMyRide() {
                     transition: 'opacity 0.3s ease, filter 0.3s ease',
                   }}
                 >
-                  {coverageRoute.coverageLine1}<br />{coverageRoute.coverageLine2}
+                  {coverage.line1}<br />{coverage.line2}
                 </h3>
               </div>
               <div className="hq">
-                <span style={{ color: 'var(--red)' }}>●</span> Zona di lancio · Raggio 8 km
+                <span style={{ color: 'var(--red)' }}>●</span> {t.why.launchZone}
               </div>
             </div>
           </div>
@@ -164,13 +158,15 @@ export function WhyMyRide() {
           {/* Safety tile */}
           <div className="tile t-safety reveal">
             <div>
-              <div className="tile-eyebrow">Sicurezza, sempre</div>
+              <div className="tile-eyebrow">{t.why.safetyEyebrow}</div>
               <h3 className="tile-title" style={{ marginTop: '10px' }}>
-                La sicurezza è<br />parte del servizio.
+                {t.why.safetyTitle.split('\n').map((line, i) => (
+                  <React.Fragment key={i}>{i > 0 && <br />}{line}</React.Fragment>
+                ))}
               </h3>
             </div>
             <ul className="checks">
-              {SAFETY_CHECKS.map((check) => (
+              {t.why.safetyChecks.map((check) => (
                 <li key={check}>
                   <span className="c"><CheckIcon /></span>
                   {check}
@@ -182,13 +178,15 @@ export function WhyMyRide() {
           {/* Price tile */}
           <div className="tile t-price reveal" style={{ '--delay': '60ms' } as React.CSSProperties}>
             <div>
-              <div className="tile-eyebrow">Prezzo onesto</div>
+              <div className="tile-eyebrow">{t.why.priceEyebrow}</div>
               <h3 className="tile-title" style={{ marginTop: '10px' }}>
-                Più veloce,<br />meno costoso.
+                {t.why.priceTitle.split('\n').map((line, i) => (
+                  <React.Fragment key={i}>{i > 0 && <br />}{line}</React.Fragment>
+                ))}
               </h3>
             </div>
             <div className="table">
-              {PRICE_ROWS.map((row) => (
+              {priceRows.map((row) => (
                 <div key={row.label} className={`row${row.you ? ' you' : ''}`}>
                   <div>
                     <b>{row.label}</b><br />
@@ -208,11 +206,11 @@ export function WhyMyRide() {
           {/* Availability tile */}
           <div className="tile t-avail reveal" style={{ '--delay': '120ms' } as React.CSSProperties}>
             <div>
-              <div className="tile-eyebrow">Disponibilità</div>
+              <div className="tile-eyebrow">{t.why.availEyebrow}</div>
               <div className="clock">
                 <em>24</em>/7
                 <span style={{ fontFamily: "'JetBrains Mono'", color: 'var(--cream-3)', fontSize: '14px', fontWeight: 400, marginLeft: '8px' }}>
-                  {'\u00B7 SEMPRE\u2003ATTIVI'}
+                  {t.why.availAlways}
                 </span>
               </div>
             </div>

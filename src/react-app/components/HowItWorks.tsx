@@ -1,51 +1,46 @@
 import React from 'react';
 import { MapPin, HardHat, Zap } from 'lucide-react';
-
-interface Step {
-  icon: React.ReactNode;
-  num: string;
-  title: string;
-  body: string;
-  delay?: string;
-}
-
-const STEPS: Step[] = [
-  {
-    icon: <MapPin size={18} />,
-    num: '01',
-    title: 'Fissa il punto.',
-    body: 'Apri l\'app, tocca la mappa. Il rider più vicino arriva in meno di 3 minuti.',
-  },
-  {
-    icon: <HardHat size={18} />,
-    num: '02',
-    title: 'Indossa il casco.',
-    body: 'Casco integrale — sanificato dopo ogni corsa. Ogni viaggio con la massima sicurezza e igiene.',
-    delay: '120ms',
-  },
-  {
-    icon: <Zap size={18} />,
-    num: '03',
-    title: 'Taglia il traffico.',
-    body: 'Ti siedi. Il rider parte. Parti, arrivi a destinazione, e paghi direttamente dall\'app quando scendi.',
-    delay: '240ms',
-  },
-];
+import { useLocale } from '../contexts/LocaleContext';
 
 export function HowItWorks() {
+  const { t } = useLocale();
+
+  const steps = [
+    {
+      icon: <MapPin size={18} />,
+      num: '01',
+      title: t.how.step1Title,
+      body: t.how.step1Body,
+    },
+    {
+      icon: <HardHat size={18} />,
+      num: '02',
+      title: t.how.step2Title,
+      body: t.how.step2Body,
+      delay: '120ms',
+    },
+    {
+      icon: <Zap size={18} />,
+      num: '03',
+      title: t.how.step3Title,
+      body: t.how.step3Body,
+      delay: '240ms',
+    },
+  ];
+
   return (
     <section id="how">
       <div className="wrap">
         <div className="section-head two reveal">
-          <h2>Tre tap. Un casco. Ovunque in un lampo.</h2>
+          <h2>{t.how.title}</h2>
           <p>
-            <span className="section-index">§ 01 / Come funziona</span><br />
-            Niente stalli, niente attese, niente ansia da traffico. MyRide ti porta dove devi essere — precisamente quando devi esserci.
+            <span className="section-index">{t.how.index}</span><br />
+            {t.how.sub}
           </p>
         </div>
 
         <div className="steps">
-          {STEPS.map((step) => (
+          {steps.map((step) => (
             <div
               key={step.num}
               className="step reveal"

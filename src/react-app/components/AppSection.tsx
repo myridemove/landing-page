@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocale } from '../contexts/LocaleContext';
 
 const AppleIcon = () => (
   <svg className="glyph" viewBox="0 0 384 512" fill="currentColor" aria-hidden="true">
@@ -34,6 +35,8 @@ const GooglePlayIcon = () => (
 );
 
 function PhoneMockup() {
+  const { t } = useLocale();
+
   return (
     <div className="phone" aria-hidden="true">
       <span className="phone-tag a"><span className="pt" />ETA 3 min</span>
@@ -46,7 +49,7 @@ function PhoneMockup() {
           </div>
           <div className="app-nav">
             <div className="hello">
-              Ciao, Sofia.
+              {t.app.phoneHello}
             </div>
             <div className="avi" />
           </div>
@@ -55,31 +58,31 @@ function PhoneMockup() {
               <circle cx="11" cy="11" r="7" />
               <path d="m21 21-4.3-4.3" />
             </svg>
-            Dove vuoi andare?
+            {t.app.phoneSearch}
             <span className="k">⌘ K</span>
           </div>
             <div className="routes">
             <div className="route">
               <span className="dot" />
               <div>
-                <small style={{ fontFamily: "'JetBrains Mono'", fontSize: '9px', color: 'var(--cream-3)', letterSpacing: '0.18em' }}>CASA</small>
-                <br /><b>Indirizzo di casa</b>
+                <small style={{ fontFamily: "'JetBrains Mono'", fontSize: '9px', color: 'var(--cream-3)', letterSpacing: '0.18em' }}>{t.app.phoneHome}</small>
+                <br /><b>{t.app.phoneHomeAddr}</b>
               </div>
               <span className="eta">6 min</span>
             </div>
             <div className="route active">
               <span className="dot" />
               <div>
-                <small style={{ fontFamily: "'JetBrains Mono'", fontSize: '9px', color: 'var(--cream-3)', letterSpacing: '0.18em' }}>LAVORO</small>
-                <br /><b>Ufficio</b>
+                <small style={{ fontFamily: "'JetBrains Mono'", fontSize: '9px', color: 'var(--cream-3)', letterSpacing: '0.18em' }}>{t.app.phoneWork}</small>
+                <br /><b>{t.app.phoneWorkAddr}</b>
               </div>
               <span className="eta">→ ora</span>
             </div>
             <div className="route">
               <span className="dot" />
               <div>
-                <small style={{ fontFamily: "'JetBrains Mono'", fontSize: '9px', color: 'var(--cream-3)', letterSpacing: '0.18em' }}>RECENTI</small>
-                <br /><b>Centro città</b>
+                <small style={{ fontFamily: "'JetBrains Mono'", fontSize: '9px', color: 'var(--cream-3)', letterSpacing: '0.18em' }}>{t.app.phoneRecent}</small>
+                <br /><b>{t.app.phoneRecentAddr}</b>
               </div>
               <span className="eta">12 min</span>
             </div>
@@ -87,7 +90,7 @@ function PhoneMockup() {
           <div className="cta-bar">
             <div>
               <small>~3 min · 7.4 km</small>
-              <b>Prenota · € 9,90</b>
+              <b>{t.app.phoneBook}</b>
             </div>
             <span className="circle">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -102,29 +105,27 @@ function PhoneMockup() {
 }
 
 export function AppSection() {
+  const { t } = useLocale();
+
   return (
     <section className="app" id="app">
       <div className="wrap app-grid">
         {/* Left — text */}
         <div className="reveal">
-          <span className="eyebrow">§ 04 / In arrivo</span>
+          <span className="eyebrow">{t.app.index}</span>
           <h2 style={{ marginTop: '18px' }}>
-            Presto tra le tue <em>mani.</em>
+            {t.app.title} <em>{t.app.titleEm}</em>
           </h2>
-          <p>
-            L&apos;app MyRide sarà gratuita. Nessun abbonamento,
-            nessun pedaggio nascosto — solo un casco e una città finalmente rapida.
-            Lancio Primavera 2027 — iscriviti alla lista d&apos;attesa per essere tra i primi a provarla.
-          </p>
+          <p>{t.app.body}</p>
 
           <div className="badges">
-            <a className="badge" href="#" aria-label="In arrivo su App Store">
+            <a className="badge" href="#" aria-label={`${t.app.comingSoon} App Store`}>
               <AppleIcon />
-              <span><small>In arrivo su</small><b>App Store</b></span>
+              <span><small>{t.app.comingSoon}</small><b>App Store</b></span>
             </a>
-            <a className="badge" href="#" aria-label="In arrivo su Google Play">
+            <a className="badge" href="#" aria-label={`${t.app.comingSoon} Google Play`}>
               <GooglePlayIcon />
-              <span><small>In arrivo su</small><b>Google Play</b></span>
+              <span><small>{t.app.comingSoon}</small><b>Google Play</b></span>
             </a>
           </div>
 
@@ -133,8 +134,8 @@ export function AppSection() {
             fontFamily: "'JetBrains Mono'", fontSize: '11px',
             color: 'var(--cream-3)', letterSpacing: '0.18em', textTransform: 'uppercase',
           }}>
-            <span><span style={{ color: 'var(--gold)' }}>●</span> Lancio Primavera 2027</span>
-            <span>Lista d&apos;attesa aperta</span>
+            <span><span style={{ color: 'var(--gold)' }}>●</span> {t.app.launchDate}</span>
+            <span>{t.app.waitlistOpen}</span>
           </div>
         </div>
 

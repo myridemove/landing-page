@@ -9,6 +9,7 @@ import { Proof } from './components/Proof';
 import { AppSection } from './components/AppSection';
 import { Footer } from './components/Footer';
 import { CityProvider } from './contexts/CityContext';
+import { LocaleProvider } from './contexts/LocaleContext';
 
 export default function App() {
   useReveal();
@@ -16,15 +17,17 @@ export default function App() {
   useCustomCursor();
 
   return (
-    <CityProvider>
-      <div id="cursor" className="cursor" aria-hidden="true" />
-      <Nav />
-      <Hero />
-      <HowItWorks />
-      <WhyMyRide />
-      <Proof />
-      <AppSection />
-      <Footer />
-    </CityProvider>
+    <LocaleProvider>
+      <CityProvider>
+        <div id="cursor" className="cursor" aria-hidden="true" />
+        <Nav />
+        <Hero />
+        <HowItWorks />
+        <WhyMyRide />
+        <Proof />
+        <AppSection />
+        <Footer />
+      </CityProvider>
+    </LocaleProvider>
   );
 }

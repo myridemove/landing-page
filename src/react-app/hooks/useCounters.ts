@@ -2,7 +2,8 @@ import { useEffect } from 'react';
 
 function formatN(n: number, fmt?: string): string {
   if (fmt === 'k') return n >= 1000 ? Math.round(n / 1000) + 'K' : String(n);
-  return n.toLocaleString('it-IT');
+  const locale = document.documentElement.lang || 'it';
+  return n.toLocaleString(locale === 'it' ? 'it-IT' : 'en-US');
 }
 
 export function useCounters() {

@@ -1,4 +1,5 @@
 import { useTheme } from '../hooks/useTheme';
+import { useLocale } from '../contexts/LocaleContext';
 
 const ArrowIcon = () => (
   <svg
@@ -48,6 +49,7 @@ const MoonIcon = () => (
 
 export function Nav() {
   const { theme, toggle } = useTheme();
+  const { locale, setLocale, t } = useLocale();
   const isDark = theme === 'dark';
 
   return (
@@ -57,7 +59,7 @@ export function Nav() {
           <button
             className="logo-mark"
             onClick={toggle}
-            aria-label={isDark ? 'Passa alla modalità chiara' : 'Passa alla modalità scura'}
+            aria-label={isDark ? t.nav.switchToLight : t.nav.switchToDark}
           >
             {isDark ? <SunIcon /> : <MoonIcon />}
           </button>
@@ -65,18 +67,22 @@ export function Nav() {
         </a>
 
         <div className="nav-links">
-          <a href="#how">Come funziona</a>
-          <a href="#why">Perché MyRide</a>
-          <a href="#proof">Riders</a>
-          <a href="#app">Scarica l&apos;app</a>
+          <a href="#how">{t.nav.howItWorks}</a>
+          <a href="#why">{t.nav.whyMyRide}</a>
+          <a href="#proof">{t.nav.riders}</a>
+          <a href="#app">{t.nav.downloadApp}</a>
         </div>
 
         <div className="nav-cta">
-          <div className="lang" aria-label="Language">
-            <b>IT</b><span>/</span>EN
-          </div>
+          <button
+            className="lang"
+            aria-label="Language"
+            onClick={() => setLocale(locale === 'it' ? 'en' : 'it')}
+          >
+            {locale === 'it' ? <><b>IT</b><span>/</span>EN</> : <>IT<span>/</span><b>EN</b></>}
+          </button>
           <a className="btn btn-primary btn-sm" href="#app">
-            Unisciti alla lista <ArrowIcon />
+            {t.nav.joinList} <ArrowIcon />
           </a>
         </div>
       </div>

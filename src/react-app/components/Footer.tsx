@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { ROUTES, useCityCtx } from '../contexts/CityContext';
+import { useLocale } from '../contexts/LocaleContext';
 
 const STEP = 28;
 const EMPTY_PAUSE = 60;
 
 export function Footer() {
   const { idx } = useCityCtx();
+  const { t } = useLocale();
   const [displayCity, setDisplayCity] = useState(ROUTES[0].city);
   const prevIdxRef = useRef(idx);
 
@@ -46,7 +48,7 @@ export function Footer() {
           {/* Brand column */}
           <div>
             <p className="foot-word">
-              {displayCity || '\u00A0'},<br />ma <em>veloce.</em>
+              {displayCity || '\u00A0'},<br />{t.footer.butFast} <em>{t.footer.butFastEm}</em>
             </p>
             <p style={{
               color: 'var(--cream-3)', maxWidth: '40ch', fontSize: '13px',
@@ -59,18 +61,18 @@ export function Footer() {
 
           <div className="foot-links">
             <div className="foot-col">
-              <h4>Servizio</h4>
-              <a href="#how">How it works <span className="it">Come funziona</span></a>
+              <h4>{t.footer.service}</h4>
+              <a href="#how">{t.footer.serviceLink}</a>
             </div>
 
             <div className="foot-col">
-              <h4>Company</h4>
-              <a href="#why">About <span className="it">Perché MyRide</span></a>
+              <h4>{t.footer.company}</h4>
+              <a href="#why">{t.footer.companyLink}</a>
             </div>
 
             <div className="foot-col">
-              <h4>Legale</h4>
-              <a href="mailto:ciao@myride.it">Contact <span className="it">Contatti</span></a>
+              <h4>{t.footer.legal}</h4>
+              <a href="mailto:ciao@myride.it">{t.footer.legalLink}</a>
             </div>
           </div>
         </div>

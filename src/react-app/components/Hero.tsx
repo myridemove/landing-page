@@ -1,16 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ROUTES, Route, useCityCtx } from '../contexts/CityContext';
-
-const MARQUEE_ITEMS = [
-  <>MI–01 Duomo <b className="dot">●</b> LIVE</>,
-  <>MI–07 Navigli <b className="dot">●</b> LIVE</>,
-  <>Tempo medio · 3.2 min</>,
-  <>Casco fornito · sempre</>,
-  <>Zona: M1 – M5</>,
-  <>MI–12 Isola <b className="dot">●</b> LIVE</>,
-  <>+37% vs taxi</>,
-  <>Casco · Giacca · Guanti</>,
-];
+import { useLocale } from '../contexts/LocaleContext';
 
 function MotoSvg() {
   return (
@@ -209,6 +199,7 @@ function BookingCard({ route, visible }: { route: Route; visible: boolean }) {
 }
 
 export function Hero() {
+  const { t } = useLocale();
   const [idx, setIdx] = useState(0);
   const [displayCity, setDisplayCity] = useState(ROUTES[0].city);
   const [cardVisible, setCardVisible] = useState(true);
@@ -219,9 +210,9 @@ export function Hero() {
   }, [idx, setGlobalIdx]);
 
   useEffect(() => {
-    const STEP = 28;        // ms per letter
-    const IDLE = 3200;      // ms showing full city before animating
-    const EMPTY_PAUSE = 60; // ms pause at empty state
+    const STEP = 28;
+    const IDLE = 3200;
+    const EMPTY_PAUSE = 60;
 
     const timeouts: ReturnType<typeof setTimeout>[] = [];
 
@@ -232,10 +223,8 @@ export function Hero() {
 
       let delay = IDLE;
 
-      // Fade out booking card at start of transition
       timeouts.push(setTimeout(() => setCardVisible(false), delay));
 
-      // Erase current city letter by letter
       for (let i = current.city.length - 1; i >= 0; i--) {
         const partial = current.city.slice(0, i);
         const d = delay;
@@ -243,11 +232,9 @@ export function Hero() {
         delay += STEP;
       }
 
-      // Switch route index when display is empty
       timeouts.push(setTimeout(() => setIdx(nextIdx), delay));
       delay += EMPTY_PAUSE;
 
-      // Type next city letter by letter
       for (let i = 1; i <= next.city.length; i++) {
         const partial = next.city.slice(0, i);
         const d = delay;
@@ -255,10 +242,7 @@ export function Hero() {
         delay += STEP;
       }
 
-      // Fade in booking card once city is fully typed
       timeouts.push(setTimeout(() => setCardVisible(true), delay));
-
-      // Schedule next cycle
       timeouts.push(setTimeout(() => runCycle(nextIdx), delay));
     };
 
@@ -268,7 +252,19 @@ export function Hero() {
   }, []);
 
   const route = ROUTES[idx];
-  const allItems = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
+
+  const marqueeItems = [
+    <>MI–01 Duomo <b className="dot">●</b> LIVE</>,
+    <>MI–07 Navigli <b className="dot">●</b> LIVE</>,
+    <>{t.hero.marqueeAvgTime}</>,
+    <>{t.hero.marqueeHelmet}</>,
+    <>{t.hero.marqueeZone}</>,
+    <>MI–12 Isola <b className="dot">●</b> LIVE</>,
+    <>+37% vs taxi</>,
+    <>{t.hero.marqueeGear}</>,
+  ];
+
+  const allItems = [...marqueeItems, ...marqueeItems];
 
   return (
     <header className="hero" id="top">
@@ -286,38 +282,37 @@ export function Hero() {
 
           <h1 className="hero-h1 reveal">
             <span style={{ display: 'inline-block' }}>{displayCity || '\u00A0'}</span><br />
-            non <span className="accent">aspetta</span><span className="period">.</span>
+            {t.hero.doesntWait} <span className="accent">{t.hero.accent}</span><span className="period">.</span>
           </h1>
 
           <p className="hero-sub reveal" style={{ '--delay': '120ms' } as React.CSSProperties}>
-            Il primo servizio moto-taxi in Europa — veloce, sicuro, economico.
-            Meno attesa nei tuoi spostamenti.
+            {t.hero.sub}
           </p>
 
           <div className="hero-ctas reveal" style={{ '--delay': '240ms' } as React.CSSProperties}>
             <a href="#app" className="btn btn-primary" data-hot="">
-              Unisciti alla lista d&apos;attesa{' '}
+              {t.hero.joinWaitlist}{' '}
               <svg className="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M5 12h14M13 5l7 7-7 7" />
               </svg>
             </a>
             <a href="#how" className="btn btn-ghost" data-hot="">
-              La nostra visione
+              {t.hero.ourVision}
             </a>
           </div>
 
           <div className="hero-meta reveal" style={{ '--delay': '360ms' } as React.CSSProperties}>
             <span>
               <b data-count="3" data-suffix=" min">0 min</b><br />
-              tempo stimato*
+              {t.hero.estTime}
             </span>
             <span>
               <b>2027</b><br />
-              lancio previsto
+              {t.hero.launchExpected}
             </span>
             <span>
               <b data-count="37" data-suffix="%">0%</b><br />
-              più veloce del taxi*
+              {t.hero.fasterThanTaxi}
             </span>
           </div>
         </div>
